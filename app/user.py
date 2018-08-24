@@ -1,7 +1,8 @@
 # 用户操作函数
 from app.models import *
-import re
+import re, time, random
 from django.utils.timezone import timezone
+
 
 def regUser(username, password_md5, email, phone=""):
     #成功返回数据库数值Id否则返回错误原因
@@ -81,3 +82,25 @@ def useCard(userid, card_number, card_password):
             return return_content
     else:
         return "card error"
+
+def createCard(cost=10):
+    #成功返回"卡号|卡密"否则返回错误原因
+    number_val = "%s%s%s" % (random.randint(10000,99999), time.time(),random.randint(1000,9999))
+    password_val=  "%s%s" % (number_val, random.randint(100,9999))
+    #后续需要添加md5修饰
+    card = Card(number=number_val, password=password_val, cost=cost, record=False)
+    card.save()
+    return "%s|%s" % (number_val, password_val)
+
+def addtotal(wechatid, money):
+    #成功返回最新充值总额否则返回错误原因
+    if wechatid == "" or money == "":
+        return "username or money is null"
+    buy = Buy.objects.filter(wechat__iexact=username)
+    if len(buy.values_list()) != 0:
+        buy = Buy(wechatid=wechatid, number=1, total = float(buy.total)+float(money))
+    else:
+        buy.number = buy.number+1
+        buy.total = float(buy.total) + float(money)
+    buy.save()
+    return "%s" % buy.total
