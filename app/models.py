@@ -35,5 +35,5 @@ class Order(models.Model):
     wechatid = models.CharField(max_length=256)
     content = models.CharField(max_length=256)
     money = models.FloatField(max_length=256)
-    time = models.DateTimeField()
-    record = models.BooleanField()
+    time = models.DateTimeField(auto_now=True)
+    record = models.BooleanField(default=False)

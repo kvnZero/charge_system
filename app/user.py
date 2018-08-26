@@ -104,3 +104,29 @@ def addtotal(wechatid, money):
         buy.total = float(buy.total) + float(money)
     buy.save()
     return "%s" % buy.total
+
+def addOrder(wechatid, content, money):
+    #成功返回订单序号，否则返回错误原因
+    if wechatid =="" or content == "" or money =="":
+        return "username or content or money is null"
+    order = Order(wechatid=wechatid, content=content, money=money)
+    order.save()
+    return "%s" % order.id
+
+def changeOrder(orderid):
+    #成功返回订单序号，否则返回错误原因
+    if orderid == "":
+        return "orderid is null"
+    order = Order.objects.filter(id=order)
+    order.record = True
+    order.save()
+    return "%s" % order.id
+
+
+def listOrder(content, money):
+    #成功获取返回订单对象(空也返回内容)，否则返回错误原因
+    if content=="" or money=="":
+        return "content or money is null"
+    order = Order.objects.filter(content__iexact=content, money__iexact=money. record=False)
+    return order
+
